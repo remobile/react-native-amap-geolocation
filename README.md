@@ -17,10 +17,35 @@ project(':react-native-amap-geolocation').projectDir = new File(settingsDir, '..
 ### Usage 使用方法
 
     const AmapGeoLocation =  require('react-native-amap-geolocation');
-    componentWillMount() {
-        AmapGeoLocation.startListener();
-        this.subscription = DeviceEventEmitter.addListener('callStateUpdated', data => { console.warn(JSON.stringify(data)); });
-    }
-    componentWillUnmount() {
-        AmapGeoLocation.stopListener();
-    }
+    startLocation (){
+        AMapGeolocation.start()
+        .then(data => {
+            console.warn(JSON.stringify(data));
+        })
+        .catch(e => {
+            console.warn(e, 'error');
+        });
+    },
+    stopLocation (){
+        AMapGeolocation.stop();
+    },
+    getPositionBaidu () {
+        Geolocation.getCurrentPosition()
+        .then(data => {
+            console.warn(JSON.stringify(data));
+            this.updateLocationState(data);
+        })
+        .catch(e => {
+            console.warn(e, 'error');
+        });
+    },
+    getLastLocation() {
+        AMapGeolocation.getLastLocation()
+        .then(data => {
+            console.warn(JSON.stringify(data));
+            this.updateLocationState(data);
+        })
+        .catch(e => {
+            console.warn(e, 'error');
+        });
+    } ,

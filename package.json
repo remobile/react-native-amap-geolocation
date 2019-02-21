@@ -1,6 +1,6 @@
 {
   "name": "@remobile/react-native-amap-geolocation",
-  "version": "1.0.4",
+  "version": "1.0.0",
   "description": "a amap geolocation module for react-native,include ios and android",
   "main": "index.js",
   "scripts": {
