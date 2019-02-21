@@ -8,13 +8,14 @@ project(':react-native-amap-geolocation').projectDir = new File(settingsDir, '..
 
 - build.gradle `compile project(':react-native-amap-geolocation')`
 
-- MainApplication`new AmapGeoLocationPackage()`
+- MainApplication `new AmapGeoLocationPackage()`
 
 ### Installation (iOS)
-- Project navigator->Libraries->Add Files to 选择 @remobile/react-native-amap-geolocation/ios/RCTAmapGeoLocation.xcodeproj
-- Project navigator->Build Phases->Link Binary With Libraries 加入 libRCTAmapGeoLocation.a
-
-### Usage 使用方法
+- Project navigator->Libraries->Add Files to select @remobile/react-native-amap-geolocation/ios/RCTAmapGeoLocation.xcodeproj
+- Project navigator->Build Phases->Link Binary With Libraries add libRCTAmapGeoLocation.a
+- Add frameworks to your project, include AMapLocationKit.framework and AMapFoundationKit.framework
+- Project navigator->Build Phases->Link Binary With Libraries add AMapLocationKit.framework and AMapFoundationKit.framework
+### Usage
 
     const AmapGeoLocation =  require('react-native-amap-geolocation');
     startLocation (){
