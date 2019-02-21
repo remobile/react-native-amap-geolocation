@@ -1,0 +1,27 @@
+{
+  "name": "@remobile/react-native-amap-geolocation",
+  "version": "1.0.4",
+  "description": "a amap geolocation module for react-native,include ios and android",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/remobile/react-native-amap-geolocation.git"
+  },
+  "keywords": [
+    "geolocation",
+    "amap",
+    "react",
+    "native",
+    "ios",
+    "android"
+  ],
+  "author": "honggao",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/remobile/react-native-amap-geolocation/issues"
+  },
+  "homepage": "https://github.com/remobile/react-native-amap-geolocation#readme"
+}
