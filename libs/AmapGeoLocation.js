@@ -14,16 +14,17 @@ const _module = NativeModules.AMapGeolocation;
 const eventEmitter = new NativeEventEmitter(_module);
 
 export default {
-    init(key) {
-        return _module.init(Platform.select(key));
+    configLocationManager(key) {
+        return _module.configLocationManager(Platform.select(key));
     },
     setOptions(options) {
         return _module.setOptions(options);
+        eventEmitter.addListener("AMapGeolocation", listener)
     },
-    start() {
+    startSerialLocation() {
         return new Promise((resolve, reject) => {
             try {
-                _module.start();
+                _module.startSerialLocation();
             }
             catch (e) {
                 reject(e);
@@ -34,10 +35,10 @@ export default {
             });
         });
     },
-    stop() {
-        return _module.stop();
+    stopSerialLocation() {
+        return _module.stopSerialLocation();
     },
-    getLastLocation() {
-        return _module.getLastLocation();
+    getCurrentPosition() {
+        return _module.startSingleLocation();
     },
 };

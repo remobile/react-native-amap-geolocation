@@ -1,6 +1,6 @@
 #import "AmapGeoLocationModule.h"
 
-@implementation RCTLocationModule {
+@implementation RCTAMapGeolocationModule {
     AMapLocationManager *_manager;
 }
 
@@ -16,9 +16,10 @@ RCT_EXPORT_METHOD(setOptions:(NSDictionary *)options) {
     if (options[@"background"]) {
         _manager.allowsBackgroundLocationUpdates = [options[@"background"] boolValue];
     }
+    NSLog(@"高德地图setOptions完成");
 }
 
-RCT_REMAP_METHOD(init, key:(NSString *)key resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_REMAP_METHOD(configLocationManager, key:(NSString *)key resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     [AMapServices sharedServices].apiKey = key;
     if (!_manager) {
         _manager = [AMapLocationManager new];
@@ -27,19 +28,23 @@ RCT_REMAP_METHOD(init, key:(NSString *)key resolver:(RCTPromiseResolveBlock)reso
     } else {
         resolve(nil);
     }
+    NSLog(@"高德地图configLocationManager完成");
 }
 
-RCT_EXPORT_METHOD(start) {
+RCT_EXPORT_METHOD(startSerialLocation) {
     [_manager startUpdatingLocation];
+    NSLog(@"高德地图startSerialLocation完成");
 }
 
-RCT_EXPORT_METHOD(stop) {
+RCT_EXPORT_METHOD(stopSerialLocation) {
     [_manager stopUpdatingLocation];
+    NSLog(@"高德地图stopSerialLocation完成");
 }
 
-RCT_REMAP_METHOD(getLastLocation, resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-    id json = [NSUserDefaults.standardUserDefaults objectForKey:RCTLocationModule.storeKey];
-    [self sendEventWithName:@"AMapGeolocation" body: json];
+RCT_REMAP_METHOD(startSingleLocation, resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+    id json = [NSUserDefaults.standardUserDefaults objectForKey:RCTAMapGeolocationModule.storeKey];
+    resolve(json);
+    NSLog(@"高德地图startSingleLocation完成");
 }
 
 - (id)json:(CLLocation *)location reGeocode:(AMapLocationReGeocode *)reGeocode {
@@ -81,7 +86,8 @@ RCT_REMAP_METHOD(getLastLocation, resolver:(RCTPromiseResolveBlock)resolve rejec
                   reGeocode:(AMapLocationReGeocode *)reGeocode {
     id json = [self json:location reGeocode:reGeocode];
     [self sendEventWithName:@"AMapGeolocation" body: json];
-    [NSUserDefaults.standardUserDefaults setObject:json forKey:RCTLocationModule.storeKey];
+    [NSUserDefaults.standardUserDefaults setObject:json forKey:RCTAMapGeolocationModule.storeKey];
+    NSLog(@"高德地图amapLocationManager didUpdateLocation");
 }
 
 - (NSArray<NSString *> *)supportedEvents {

@@ -3,6 +3,6 @@
 #import <AMapFoundationKit/AMapFoundationKit.h>
 #import <AMapLocationKit/AMapLocationKit.h>
 
-@interface RCTLocationModule : RCTEventEmitter <RCTBridgeModule, AMapLocationManagerDelegate>
+@interface RCTAMapGeolocationModule : RCTEventEmitter <RCTBridgeModule, AMapLocationManagerDelegate>
 
 @end

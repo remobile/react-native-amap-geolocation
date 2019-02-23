@@ -41,11 +41,12 @@ public class AmapGeoLocationModule extends ReactContextBaseJavaModule implements
                 map.putString("errInfo", location.getErrorInfo());
                 eventEmitter.emit("AMapGeolocation", map);
             }
+            this.stopSerialLocation();
         }
     }
 
     @ReactMethod
-    public void init(String key, Promise promise) {
+    public void configLocationManager(String key, Promise promise) {
         if (locationClient != null) {
             locationClient.onDestroy();
         }
@@ -70,17 +71,17 @@ public class AmapGeoLocationModule extends ReactContextBaseJavaModule implements
     }
 
     @ReactMethod
-    public void start() {
+    public void startSerialLocation() {
         locationClient.startLocation();
     }
 
     @ReactMethod
-    public void stop() {
+    public void stopSerialLocation() {
         locationClient.stopLocation();
     }
 
     @ReactMethod
-    public void getLastLocation(Promise promise) {
+    public void startSingleLocation(Promise promise) {
         promise.resolve(toReadableMap(locationClient.getLastKnownLocation()));
     }
 
