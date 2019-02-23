@@ -17,9 +17,49 @@ project(':react-native-amap-geolocation').projectDir = new File(settingsDir, '..
 - Project navigator->Build Phases->Link Binary With Libraries add AMapLocationKit.framework and AMapFoundationKit.framework
 ### Usage
 
-    const AmapGeoLocation =  require('react-native-amap-geolocation');
+
+module.exports = React.createClass({
+    getInitialState () {
+        return {
+             location: {}
+        };
+    },
+    componentWillMount () {
+        SplashScreen.hide();
+    },
+
+     componentDidMount () {
+        SplashScreen.hide();
+        this.configLocationManager();
+    },
+    configLocationManager () {
+        AMapGeolocation.configLocationManager({
+            ios: "9bd6c82e77583020a73ef1af59d0c759",
+            android: "a10f2e6fc68417d1698f32cf69ef8f5e"
+        }).then(()=>{
+            AMapGeolocation.setOptions({
+                interval: 10000,
+                distanceFilter: 10,
+                background: true,
+                reGeocode: true
+                });
+        }).catch(e => {
+            console.warn(e, 'error');
+        });
+    },
+    componentWillUnmount() {
+      AMapGeolocation.stopSerialLocation();
+  },
+    updateLocationState(location) {
+      if (location) {
+        location.timestamp = new Date(location.timestamp).toLocaleString();
+        this.setState({ location });
+        console.log(location);
+      }
+  },
+
     startLocation (){
-        AMapGeolocation.start()
+        AMapGeolocation.startSerialLocation()
         .then(data => {
             console.warn(JSON.stringify(data));
         })
@@ -28,20 +68,10 @@ project(':react-native-amap-geolocation').projectDir = new File(settingsDir, '..
         });
     },
     stopLocation (){
-        AMapGeolocation.stop();
+        AMapGeolocation.stopSerialLocation();
     },
-    getPositionBaidu () {
-        Geolocation.getCurrentPosition()
-        .then(data => {
-            console.warn(JSON.stringify(data));
-            this.updateLocationState(data);
-        })
-        .catch(e => {
-            console.warn(e, 'error');
-        });
-    },
-    getLastLocation() {
-        AMapGeolocation.getLastLocation()
+    getLastLocationAmap() {
+        AMapGeolocation.getCurrentPosition()
         .then(data => {
             console.warn(JSON.stringify(data));
             this.updateLocationState(data);
@@ -50,3 +80,33 @@ project(':react-native-amap-geolocation').projectDir = new File(settingsDir, '..
             console.warn(e, 'error');
         });
     } ,
+    render() {
+      const { location } = this.state;
+      return (
+        <View style={styles.container}>
+          <ScrollView style={styles.controls}>
+            <Button style={styles.button} onPress={this.getLastLocationAmap}>高德定位</Button>
+            <Button style={styles.button} onPress={this.getPositionBaidu}>百度定位</Button>
+            <Button style={styles.button} onPress={this.getLastLocationTencent}>腾讯定位</Button>
+          </ScrollView>
+        </View>
+      );
+  },
+});
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    controls: {
+        height: sr.h/2,
+    },
+    button: {
+        height: 46,
+        width: 300,
+        marginLeft: (sr.w - 300) / 2,
+        marginTop: 60,
+        backgroundColor: '#c81622',
+        borderRadius:4,
+    },
+});
