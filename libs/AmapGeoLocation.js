@@ -39,6 +39,17 @@ export default {
         return _module.stopSerialLocation();
     },
     getCurrentPosition() {
-        return _module.startSingleLocation();
+        return new Promise((resolve, reject) => {
+            try {
+                _module.startSingleLocation();
+            }
+            catch (e) {
+                reject(e);
+                return;
+            }
+            eventEmitter.addListener("AMapGeolocation", resp => {
+                resolve(resp);
+            });
+        });
     },
 };

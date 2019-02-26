@@ -16,6 +16,13 @@ RCT_EXPORT_METHOD(setOptions:(NSDictionary *)options) {
     if (options[@"background"]) {
         _manager.allowsBackgroundLocationUpdates = [options[@"background"] boolValue];
     }
+     [_manager setDesiredAccuracy:kCLLocationAccuracyHundredMeters];
+    if (options[@"locationTimeout"]) {
+        _manager.locationTimeout = [options[@"locationTimeout"] doubleValue];
+    }
+    if (options[@"reGeocodeTimeout"]) {
+        _manager.reGeocodeTimeout = [options[@"reGeocodeTimeout"] doubleValue];
+    }
     NSLog(@"高德地图setOptions完成");
 }
 
@@ -41,10 +48,24 @@ RCT_EXPORT_METHOD(stopSerialLocation) {
     NSLog(@"高德地图stopSerialLocation完成");
 }
 
-RCT_REMAP_METHOD(startSingleLocation, resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-    id json = [NSUserDefaults.standardUserDefaults objectForKey:RCTAMapGeolocationModule.storeKey];
-    resolve(json);
-    NSLog(@"高德地图startSingleLocation完成");
+RCT_EXPORT_METHOD(startSingleLocation) {
+    [_manager requestLocationWithReGeocode:NO completionBlock:^(CLLocation *location, AMapLocationReGeocode *regeocode, NSError *error) {
+
+        if (error)
+        {
+            NSLog(@"locError:{%ld - %@};", (long)error.code, error.localizedDescription);
+
+            [self sendEventWithName:@"TencentGeolocation" body: @{
+                                                                  @"errorCode": @(error.code),
+                                                                  @"errorMsg": error.localizedDescription,
+                                                                  }];
+        }
+        NSLog(@"location:%@", location);
+        id json = [self json:location reGeocode:regeocode];
+        [self sendEventWithName:@"AMapGeolocation" body: json];
+         NSLog(@"高德地图startSingleLocation完成");
+    }];
+   
 }
 
 - (id)json:(CLLocation *)location reGeocode:(AMapLocationReGeocode *)reGeocode {
